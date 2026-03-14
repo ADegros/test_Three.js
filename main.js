@@ -93,6 +93,13 @@ const groundTexture = textureLoader.load('resources/images/stone-pavement.jpg', 
 })
 
 function animate( time ) {
+    const speed = 1.5;
+
+    sphere.position.x = Math.cos(time / 1000 * speed) * radius;
+    sphere.position.z = Math.sin(time / 1000 * speed) * radius;
+
+    sphere.rotation.x = time/ 1000 * speed * (radius / sphere.geometry.parameters.radius);
+
     renderer.render( scene, camera );
 }
 renderer.setAnimationLoop( animate );
