@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 const canvaWidth = 900;
 const canvaHeight = 800;
@@ -107,6 +108,8 @@ loader.load('resources/models/worker_taking_a_walk.glb', (texture) => {
     console.error('Error loading worker model:', error);
 })
 
+const controls = new OrbitControls( camera, renderer.domElement );
+
 function animate( time ) {
     const speed = 1.5;
 
@@ -114,6 +117,8 @@ function animate( time ) {
     sphere.position.z = Math.sin(time / 1000 * speed) * radius;
 
     sphere.rotation.x = time/ 1000 * speed * (radius / sphere.geometry.parameters.radius);
+
+    controls.update();
 
     renderer.render( scene, camera );
 }
