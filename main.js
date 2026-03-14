@@ -145,9 +145,11 @@ loader.load('resources/models/worker_inplace.glb', (gltf) => {
 })
 
 const controls = new OrbitControls( camera, renderer.domElement );
-const clock = new THREE.Clock();
+const timer = new THREE.Timer();
+timer.connect(document);
 
 function animate( time ) {
+    timer.update();
     const speed = 1.5;
 
     sphere.position.x = Math.cos(time / 1000 * speed) * radius;
@@ -155,7 +157,7 @@ function animate( time ) {
 
     sphere.rotation.x = time/ 1000 * speed * (radius / sphere.geometry.parameters.radius);
 
-    const delta = clock.getDelta();
+    const delta = timer.getDelta();
 
     if ( mixer ) {
         mixer.update( delta );
