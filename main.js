@@ -159,6 +159,24 @@ function animate( time ) {
         mixer.update( delta );
     }
 
+    if (worker) {
+        // Making the worker walk on a circle
+        const walkSpeed = 0.5;
+        const currentAngle = time / 1000 * walkSpeed;
+
+        const walkRadius = radius * 1.5;
+
+        worker.position.x = Math.cos(currentAngle) * walkRadius;
+        worker.position.z = Math.sin(currentAngle) * walkRadius;
+
+        // Making the worker looking at "next position" smoothly
+        const nextAngle = currentAngle + 1;
+        const targetX = Math.cos(nextAngle) * walkRadius;
+        const targetZ = Math.sin(nextAngle) * walkRadius;
+
+        worker.lookAt( targetX, worker.position.y, targetZ );
+    }
+
     controls.update();
 
     renderer.render( scene, camera );
