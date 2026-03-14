@@ -57,4 +57,10 @@ const baseOutline = new THREE.Mesh(baseOutlineGeometry, baseOutlineMaterial);
 baseOutline.rotation.x = -Math.PI / 2;
 scene.add(baseOutline);
 
+const sphereGeometry = new THREE.SphereGeometry(radius/4);
+const sphereMaterial = new THREE.MeshBasicMaterial({color: 0x00ffff});
+const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
+sphere.position.set(-radius, radius/4, 0);
+scene.add(sphere);
+
 renderer.render(scene, camera);
