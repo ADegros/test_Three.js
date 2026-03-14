@@ -116,7 +116,7 @@ let mixer;
 let worker;
 
 const loader = new GLTFLoader();
-loader.load('resources/models/worker_taking_a_walk.glb', (texture) => {
+loader.load('resources/models/worker_inplace.glb', (texture) => {
     worker = texture.scene;
 
     worker.traverse( (child) => {
@@ -170,7 +170,7 @@ function animate( time ) {
         worker.position.z = Math.sin(currentAngle) * walkRadius;
 
         // Making the worker looking at "next position" smoothly
-        const nextAngle = currentAngle + 1;
+        const nextAngle = currentAngle + 0.6;
         const targetX = Math.cos(nextAngle) * walkRadius;
         const targetZ = Math.sin(nextAngle) * walkRadius;
 
