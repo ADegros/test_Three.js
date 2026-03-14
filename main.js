@@ -74,4 +74,25 @@ const directionalLight = new THREE.DirectionalLight(0xffffff, 10);
 directionalLight.position.set(50, 50, 50);
 scene.add(directionalLight);
 
-renderer.render(scene, camera);
+// Adding a textured ground
+const groundGeometry = new THREE.PlaneGeometry(500,500);
+const textureLoader = new THREE.TextureLoader();
+const groundTexture = textureLoader.load('resources/images/stone-pavement.jpg', (texture) => {
+    texture.colorSpace = THREE.SRGBColorSpace;
+    const groundMaterial = new THREE.MeshStandardMaterial({
+        map: texture,
+        side: THREE.DoubleSide
+    });
+    const ground = new THREE.Mesh(groundGeometry, groundMaterial);
+    groundTexture.wrapS = THREE.RepeatWrapping;
+    groundTexture.wrapT = THREE.RepeatWrapping;
+    groundTexture.repeat.set(10, 10);
+    ground.rotation.x = -Math.PI / 2;
+    ground.position.y = -0.1;
+    scene.add(ground);
+})
+
+function animate( time ) {
+    renderer.render( scene, camera );
+}
+renderer.setAnimationLoop( animate );
