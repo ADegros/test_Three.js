@@ -109,6 +109,8 @@ const groundTexture = textureLoader.load('resources/images/stone-pavement.jpg', 
     ground.position.y = -0.1;
     ground.receiveShadow = true;
     scene.add(ground);
+}, undefined, (error) => {
+    console.error('Error loading ground texture:', error);
 })
 
 // Adding a 3D model of a worker and get his animation
@@ -116,8 +118,8 @@ let mixer;
 let worker;
 
 const loader = new GLTFLoader();
-loader.load('resources/models/worker_inplace.glb', (texture) => {
-    worker = texture.scene;
+loader.load('resources/models/worker_inplace.glb', (gltf) => {
+    worker = gltf.scene;
 
     worker.traverse( (child) => {
         if (child.isMesh) {
@@ -131,8 +133,8 @@ loader.load('resources/models/worker_inplace.glb', (texture) => {
     scene.add(worker);
 
     mixer = new THREE.AnimationMixer(worker);
-    if (texture.animations && texture.animations.length > 0){
-        const clip = texture.animations[0];
+    if (gltf.animations && gltf.animations.length > 0){
+        const clip = gltf.animations[0];
         const action = mixer.clipAction(clip);
         action.play();
     } else {
