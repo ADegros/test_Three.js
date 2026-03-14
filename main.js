@@ -111,6 +111,7 @@ const groundTexture = textureLoader.load('resources/images/stone-pavement.jpg', 
     scene.add(ground);
 })
 
+// Adding a 3D model of a worker and get his animation
 let mixer;
 let worker;
 
@@ -128,11 +129,21 @@ loader.load('resources/models/worker_taking_a_walk.glb', (texture) => {
     worker.scale.set(20, 20, 20);
     worker.position.set(0, 0, 0);
     scene.add(worker);
+
+    mixer = new THREE.AnimationMixer(worker);
+    if (texture.animations && texture.animations.length > 0){
+        const clip = texture.animations[0];
+        const action = mixer.clipAction(clip);
+        action.play();
+    } else {
+        console.warn("No animation fund !")
+    }
 }, undefined, (error) => {
     console.error('Error loading worker model:', error);
 })
 
 const controls = new OrbitControls( camera, renderer.domElement );
+const clock = new THREE.Clock();
 
 function animate( time ) {
     const speed = 1.5;
@@ -141,6 +152,12 @@ function animate( time ) {
     sphere.position.z = Math.sin(time / 1000 * speed) * radius;
 
     sphere.rotation.x = time/ 1000 * speed * (radius / sphere.geometry.parameters.radius);
+
+    const delta = clock.getDelta();
+
+    if ( mixer ) {
+        mixer.update( delta );
+    }
 
     controls.update();
 
