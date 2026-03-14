@@ -17,7 +17,7 @@ document.body.appendChild(renderer.domElement);
 
 // Adding Basic Circle
 const baseCircleGeometry = new THREE.CircleGeometry(radius, 32);
-const baseCircleMaterial = new THREE.MeshBasicMaterial({color: 0xffff00});
+const baseCircleMaterial = new THREE.MeshStandardMaterial({color: 0xffff00});
 const baseCircle = new THREE.Mesh(baseCircleGeometry, baseCircleMaterial);
 baseCircle.rotation.x = -Math.PI / 2;
 scene.add(baseCircle);
@@ -51,16 +51,27 @@ const baseOutline = new THREE.Line(baseOutlineGeometry, baseOutlineMaterial);
 scene.add(baseOutline);
 */
 
+// Adding Basic Outline Circle
 const baseOutlineGeometry = new THREE.RingGeometry(radius, radius+1, 64);
-const baseOutlineMaterial = new THREE.MeshBasicMaterial({color: 0x0000ff});
+const baseOutlineMaterial = new THREE.MeshStandardMaterial({color: 0x0000ff});
 const baseOutline = new THREE.Mesh(baseOutlineGeometry, baseOutlineMaterial);
 baseOutline.rotation.x = -Math.PI / 2;
 scene.add(baseOutline);
 
-const sphereGeometry = new THREE.SphereGeometry(radius/4);
-const sphereMaterial = new THREE.MeshBasicMaterial({color: 0x00ffff});
+// Adding a sphere
+const sphereGeometry = new THREE.SphereGeometry(radius/4, 128);
+const sphereMaterial = new THREE.MeshPhongMaterial({color: 0x00ffff});
 const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
 sphere.position.set(-radius, radius/4, 0);
 scene.add(sphere);
+
+// Adding ambient light
+const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+scene.add(ambientLight);
+
+// Adding directional light
+const directionalLight = new THREE.DirectionalLight(0xffffff, 10);
+directionalLight.position.set(50, 50, 50);
+scene.add(directionalLight);
 
 renderer.render(scene, camera);
