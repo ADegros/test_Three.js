@@ -16,12 +16,14 @@ camera.lookAt(0, 0, 0);
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(canvaWidth,canvaHeight);
 document.body.appendChild(renderer.domElement);
+renderer.shadowMap.enabled = true;
 
 // Adding Basic Circle
 const baseCircleGeometry = new THREE.CircleGeometry(radius, 32);
 const baseCircleMaterial = new THREE.MeshStandardMaterial({color: 0xffff00});
 const baseCircle = new THREE.Mesh(baseCircleGeometry, baseCircleMaterial);
 baseCircle.rotation.x = -Math.PI / 2;
+baseCircle.receiveShadow = true;
 scene.add(baseCircle);
 
 /*
@@ -58,6 +60,7 @@ const baseOutlineGeometry = new THREE.RingGeometry(radius, radius+1, 64);
 const baseOutlineMaterial = new THREE.MeshStandardMaterial({color: 0x0000ff});
 const baseOutline = new THREE.Mesh(baseOutlineGeometry, baseOutlineMaterial);
 baseOutline.rotation.x = -Math.PI / 2;
+baseOutline.receiveShadow = true;
 scene.add(baseOutline);
 
 // Adding a sphere
@@ -65,6 +68,8 @@ const sphereGeometry = new THREE.SphereGeometry(radius/4, 128);
 const sphereMaterial = new THREE.MeshPhongMaterial({color: 0x00ffff});
 const sphere = new THREE.Mesh(sphereGeometry, sphereMaterial);
 sphere.position.set(-radius, radius/4, 0);
+sphere.receiveShadow = true;
+sphere.castShadow = true;
 scene.add(sphere);
 
 // Adding ambient light
@@ -74,7 +79,18 @@ scene.add(ambientLight);
 // Adding directional light
 const directionalLight = new THREE.DirectionalLight(0xffffff, 10);
 directionalLight.position.set(50, 50, 50);
+directionalLight.castShadow = true;
 scene.add(directionalLight);
+
+// Enlarging the size of the box where shadows are calculated
+directionalLight.shadow.camera.left = -100;
+directionalLight.shadow.camera.right = 100;
+directionalLight.shadow.camera.top = 100;
+directionalLight.shadow.camera.bottom = -100;
+
+// Upgrading shadow resolution
+directionalLight.shadow.mapSize.width = 1024;
+directionalLight.shadow.mapSize.height = 1024;
 
 // Adding a textured ground
 const groundGeometry = new THREE.PlaneGeometry(500,500);
@@ -91,6 +107,7 @@ const groundTexture = textureLoader.load('resources/images/stone-pavement.jpg', 
     groundTexture.repeat.set(10, 10);
     ground.rotation.x = -Math.PI / 2;
     ground.position.y = -0.1;
+    ground.receiveShadow = true;
     scene.add(ground);
 })
 
@@ -100,6 +117,13 @@ let worker;
 const loader = new GLTFLoader();
 loader.load('resources/models/worker_taking_a_walk.glb', (texture) => {
     worker = texture.scene;
+
+    worker.traverse( (child) => {
+        if (child.isMesh) {
+            child.castShadow = true;
+            child.receiveShadow = true;
+        }
+    })
 
     worker.scale.set(20, 20, 20);
     worker.position.set(0, 0, 0);
