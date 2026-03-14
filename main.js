@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 const canvaWidth = 900;
 const canvaHeight = 800;
@@ -7,7 +8,7 @@ const radius = 40;
 // Creation of scene and camera
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(90, canvaWidth / canvaHeight, 0.1, 1000);
-camera.position.set(0, 50, -100);
+camera.position.set(0, 50, 100);
 camera.lookAt(0, 0, 0);
 
 // Creation of renderer and adding to the document body
@@ -90,6 +91,20 @@ const groundTexture = textureLoader.load('resources/images/stone-pavement.jpg', 
     ground.rotation.x = -Math.PI / 2;
     ground.position.y = -0.1;
     scene.add(ground);
+})
+
+let mixer;
+let worker;
+
+const loader = new GLTFLoader();
+loader.load('resources/models/worker_taking_a_walk.glb', (texture) => {
+    worker = texture.scene;
+
+    worker.scale.set(20, 20, 20);
+    worker.position.set(0, 0, 0);
+    scene.add(worker);
+}, undefined, (error) => {
+    console.error('Error loading worker model:', error);
 })
 
 function animate( time ) {
